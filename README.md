@@ -29,13 +29,80 @@ Enterprise-grade Manufacturing Execution System (MES) & Discrete/Batch ERP with 
 
 ## 🚀 Getting Started
 
-### Prerequisites
+### Option 1: Docker (Recommended)
+
+Run the full production-ready stack (Nginx, PHP 8.4-FPM, MySQL 8.0, Redis, Queue Worker) with a single command.
+
+#### 1. Prerequisites
+- [Docker](https://docs.docker.com/get-docker/) (v20.10+)
+- [Docker Compose](https://docs.docker.com/compose/) (v2.0+)
+
+#### 2. Setup & Start
+```bash
+# Clone the repository
+git clone git@github.com:webotapp-academy/WebotApp-Apex-Manufacturing-ERP.git
+cd WebotApp-Apex-Manufacturing-ERP
+
+# Prepare environment file
+cp .env.docker.example .env
+
+# Build and start all containers in detached mode
+docker compose up -d --build
+```
+
+The container entrypoint will automatically:
+1. Initialize `.env` and generate an `APP_KEY` if not present.
+2. Ensure directory permissions on `storage/` and `bootstrap/cache/`.
+3. Wait for MySQL to become ready and automatically run database migrations.
+
+#### 3. Seed Demo Data (Optional)
+To seed the database with demo companies, plants, users, and manufacturing operations:
+```bash
+docker compose exec app php artisan db:seed
+```
+
+#### 4. Access the Application
+- Web Application: **`http://localhost:8000`**
+- Default Admin Credentials:
+  - **Email**: `admin@apexprecision.in`
+  - **Password**: `password`
+
+#### 5. Useful Docker Commands
+```bash
+# View container logs
+docker compose logs -f app
+docker compose logs -f web
+
+# Run Artisan commands
+docker compose exec app php artisan <command>
+
+# Run test suite
+docker compose exec -e APP_ENV=testing app php artisan test
+
+# Run bash inside app container
+docker compose exec app bash
+
+# Recompile frontend assets in container
+docker compose exec app npm run build
+
+# Stop all containers
+docker compose down
+
+# Stop and wipe persistent database & cache volumes
+docker compose down -v
+```
+
+---
+
+### Option 2: Local Manual Setup
+
+#### Prerequisites
 - PHP 8.3 or higher
 - Composer
 - Node.js & npm
 - MySQL 8.0+
 
-### Setup Commands
+#### Setup Commands
 ```bash
 # Clone the repository
 git clone git@github.com:webotapp-academy/WebotApp-Apex-Manufacturing-ERP.git
